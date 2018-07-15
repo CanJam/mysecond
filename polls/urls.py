@@ -5,5 +5,7 @@ from .import views
 urlpatterns = [
        path('',views.index,name='index'),#path(‘’（链接），方法名，name=‘’)，path的格式
        # path('nono/',views.nono,name='i'),#自己测试语句，
-
+       path('<int:question_id>/',views.detail,name='detail'),
+       path('<int:question_id>/results/',views.results,name='results'),#结果页
+       path('<int:question_id>/vote/',views.vote,name='vote'), #投票页
 ]
