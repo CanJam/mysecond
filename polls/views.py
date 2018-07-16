@@ -5,6 +5,7 @@ from django.template import loader
 from django.http import Http404
 from django.urls import reverse
 from django.views import generic
+from django.utils import timezone
 
 from .models import Question,Choice
 """
@@ -37,7 +38,7 @@ def index(request):
     return render(request,'polls/index.html',context)
 # def nono(request): 自定义
  # return HttpResponse('nonoo')  
-"""
+
 #优化3,导入通用视图
 #ListView，自动生成的 context 变量是 question_list。
 #为了覆盖这个行为，我们提供 context_object_name 属性，表示我们想使用 latest_question_list。
@@ -46,8 +47,19 @@ class IndexView(generic.ListView):
     context_object_name = 'latest_question_list'
 
     def get_queryset(self):
-        """Return the last five published questions."""
+        #Return the last five published questions.
         return Question.objects.order_by('-pub_date')[:5]
+#优化4：改进 get_queryset() 方法，让他它能通过将 Question 的 pub_data 属性与 timezone.now() 相比较来判断是否应该显示此 Question
+"""
+class IndexView(generic.ListView):
+    template_name = 'polls/index.html'
+    context_object_name = 'latest_question_list'
+
+    def get_queryset(self):
+        """Return the last five published questions."""
+        return Question.objects.filter(
+            pub_date__lte = timezone.now()
+        ).order_by('-pub_date')[:5]        
 """
 def detail(request, question_id): #detail(request=<HttpRequest object>, question_id=34)调用形式
     return HttpResponse("You're looking at question %s." % question_id)
@@ -73,6 +85,11 @@ def detail(request,question_id):
 class DetailView(generic.DetailView):
     model = Question
     template_name = 'polls/detail.html'
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
 
 """    
 def results(request, question_id):    

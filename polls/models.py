@@ -1,6 +1,6 @@
 #！-*-coding:UTF-8-*-
-from django.db import models
 import datetime #导入了 Python 的标准 datetime 模块
+from django.db import models
 from django.utils import timezone #和时区相关的 django.utils.timezone 工具模块
 
 class Question(models.Model):  #Question 模型包括问题描述和发布时间
@@ -8,8 +8,11 @@ class Question(models.Model):  #Question 模型包括问题描述和发布时间
     pub_date = models.DateTimeField('date published') #日期时间字段被表示为 DateTimeField
     def __str__(self): #定义--str--（）很重要
         return self.question_text
+    
     def was_published_recently(self):
-        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+        now = timezone.now()
+        return now - datetime.timedelta(days=1) <= self.pub_date <= now
+
 class Choice(models.Model):    #Choice 模型有两个字段，选项描述和当前得票数
     question = models.ForeignKey(Question,on_delete=models.CASCADE) #使用 ForeignKey定义了一个关系,每个 Choice 对象都关联到一个 Question 对象
     choice_text = models.CharField(max_length=200)
