@@ -12,7 +12,9 @@ class Question(models.Model):  #Question 模型包括问题描述和发布时间
     def was_published_recently(self):
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
-
+    was_published_recently.admin_order_field = 'pub_date'
+    was_published_recently.boolean = True
+    was_published_recently.short_description = 'Published Recently?'
 class Choice(models.Model):    #Choice 模型有两个字段，选项描述和当前得票数
     question = models.ForeignKey(Question,on_delete=models.CASCADE) #使用 ForeignKey定义了一个关系,每个 Choice 对象都关联到一个 Question 对象
     choice_text = models.CharField(max_length=200)
