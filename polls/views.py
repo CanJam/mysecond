@@ -6,8 +6,8 @@ from django.http import Http404
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
-
-from .models import Question,Choice
+from polls import models
+from .models import Question,Choice,user
 """
 #问题：页面的设计写死在视图函数的代码里的
 def index(request): #定义一个方法请求
@@ -133,4 +133,13 @@ def vote(request,question_id):
         selected_choice.save()
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))        
 # Create your views here.
+
+def login(request):
+    if request.method == "post":
+        username = request.POST.get("username","unknow")
+        password = request.POST.get("password","unknow")
+        models.user.objects.create(user=username,pwd=password)
+    else: 
+        user_list = models.user.objects.all()
+    return render(request,"polls/login.html",{"data":user_list})
 

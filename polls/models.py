@@ -21,8 +21,10 @@ class Choice(models.Model):    #Choice 模型有两个字段，选项描述和�
     votes = models.IntegerField(default=0) #votes 的 default 也就是默认值，设为0
     def __str__(self):
         return self.choice_text
-
-# Create your models here.
+class user(models.Model): #包含一个user和password
+    user = models.CharField(max_length = 20)
+    password = models.CharField(max_length = 100)
+    # Create your models here.
 #
 """
 改变模型需要这三步：

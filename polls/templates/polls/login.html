@@ -1,0 +1,22 @@
+<h1>用户输入</h1>
+<form action="/polls/login/" method="POST">
+
+    <!--{% csrf_token %}所有针对内部 URL 的 POST 表单都应该使用 {% csrf_token %} 模板标签-->         
+        <table>
+           <input type="text" name="username"/>
+           <input type="password" name="password"/>
+           <input type="submit" value="登录">             
+
+        </table>
+            
+    </form>
+        <table>
+            <tbody>
+                {% for line in data %}
+                    <tr>
+                        <td>{{line.user}}</td>
+                        <td>{{line.pwd}}</td>    
+                    </tr>
+                {% endfor %}        
+            </tbody>
+        </table>    
